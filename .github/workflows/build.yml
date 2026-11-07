@@ -1,0 +1,35 @@
+name: Build Bengkel Akademi APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil file repository
+        uses: actions/checkout@v4
+
+      - name: Siapkan Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Siapkan Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Ekstrak dan build APK
+        run: |
+          unzip Bengkel_Akademi_Paket.zip
+          cd bengkel_akademi/AndroidStudioProject
+          gradle assembleDebug
+
+      - name: Simpan APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bengkel-Akademi-APK
+          path: bengkel_akademi/AndroidStudioProject/app/build/outputs/apk/debug/app-debug.apk
